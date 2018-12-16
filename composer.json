@@ -1,0 +1,14 @@
+{
+    "name": "minbaby/exercism-php-track",
+    "type": "project",
+    "require": {
+        "phpunit/phpunit": "^7.5"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "minbaby.zhang",
+            "email": "minbaby.zhang@gmail.com"
+        }
+    ]
+}
