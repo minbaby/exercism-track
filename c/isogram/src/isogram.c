@@ -11,10 +11,6 @@ bool is_isogram(const char phrase[])
 
     int len = strlen(phrase);
 
-    if (len == 0) {
-        return 1;
-    }
-
     int map[26] = {0};
 
     for (int i = 0; i < len; i++) {
