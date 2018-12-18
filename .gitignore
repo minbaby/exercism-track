@@ -1,3 +1,6 @@
 /vendor/
 metadata.json
 *.out
+.gradle/
+build/
+*.dSYM/
