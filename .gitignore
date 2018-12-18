@@ -4,3 +4,7 @@ metadata.json
 .gradle/
 build/
 *.dSYM/
+.settings
+.project
+.classpath
+bin
