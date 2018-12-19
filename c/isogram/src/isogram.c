@@ -1,7 +1,7 @@
 #include "isogram.h"
 #include <string.h>
-#include <stdio.h>
 #include <ctype.h>
+#include <stdio.h>
 
 bool is_isogram(const char phrase[])
 {
@@ -9,14 +9,16 @@ bool is_isogram(const char phrase[])
         return 0;
     }
 
-    int len = strlen(phrase);
-
     int map[26] = {0};
-
-    for (int i = 0; i < len; i++) {
-        if (++map[tolower(phrase[i]) - 'a'] > 1 && phrase[i] != ' ') {
+    int index = 0;
+    int charIndex = 0;
+    while(phrase[index] != '\0') {
+        charIndex = tolower(phrase[index]) - 'a';
+        map[charIndex]++;
+        if (map[charIndex] > 1 && phrase[index] != ' ') {
             return 0;
         }
+        index++;
     }
        
     return 1;
