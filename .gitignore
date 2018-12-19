@@ -1,5 +1,5 @@
 /vendor/
-metadata.json
+# metadata.json
 *.out
 .gradle/
 build/
