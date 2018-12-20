@@ -9,3 +9,5 @@ build/
 .classpath
 bin
 .vscode
+.idea
+*.class
