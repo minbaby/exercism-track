@@ -6,17 +6,27 @@ class Anagram
 {
     private char[] charArray;
 
+    private String string;
+
     public Anagram(String string)
     {
-        this.charArray = string.toLowerCase().toCharArray();
+        this.string = string.toLowerCase();
+        this.charArray = this.string.toCharArray();
         Arrays.sort(this.charArray);
     }
 
     public List<String> match(List<String> list) 
     {
         List<String> ret = new ArrayList<String>();
+        String tmpString;
+        char[] tmpArray;
         for (String t : list) {
-            char[] tmpArray = t.toLowerCase().toCharArray();
+            tmpString = t.toLowerCase();
+            if (tmpString.equals(this.string)) {
+                break;
+            }
+            
+            tmpArray = tmpString.toCharArray();
             Arrays.sort(tmpArray);
             if (Arrays.equals(this.charArray, tmpArray)) {
                 ret.add(t);
