@@ -3,65 +3,45 @@
 #include "string.h"
 #include "stdbool.h"
 #include "ctype.h"
+#include "stdlib.h"
 
-#define STRING_SIZE (MAX_WORD_LENGTH + 1)
+#define __DEBUG false
 
 void printW(word_count_word_t *words)
 {
+    if (!__DEBUG) {
+        return;
+    }
+
     for (int i=0; i < MAX_WORDS; i++) {
-        0 && words[i].count && printf("[%s-%d]\n", words[i].text, words[i].count);
+        words[i].count && printf("[%s-%d]\n", words[i].text, words[i].count);
     }
 }
 
-char *rtrim(char *str, const char *seps)
+char* fix_char(char *ch, int len) 
 {
-    int i;
-    if (seps == NULL) {
-        seps = "\t\n\v\f\r ";
+    if (ch[0] == '\'' && ch[len-1] == '\'') {
+        char *ret = malloc(len-2);
+        memcpy(ret, ch+1, len - 2);
+        return ret;     
     }
-    i = strlen(str) - 1;
-    while (i >= 0 && strchr(seps, str[i]) != NULL) {
-        str[i] = '\0';
-        i--;
-    }
-    return str;
+
+    return ch;
 }
 
-char *ltrim(char *str, const char *seps)
+char* str_tolower(char *ch, int len) 
 {
-    size_t totrim;
-    if (seps == NULL) {
-        seps = "\t\n\v\f\r ";
-    }
-    totrim = strspn(str, seps);
-    if (totrim > 0) {
-        size_t len = strlen(str);
-        if (totrim == len) {
-            str[0] = '\0';
-        }
-        else {
-            memmove(str, str + totrim, len + 1 - totrim);
-        }
-    }
-    return str;
-}
-
-char *xtrim(char *str, const char *seps)
-{
-    return ltrim(rtrim(str, seps), seps);
-}
-
-bool test(word_count_word_t *words, const char *ch)
-{
-    char ch_tmp[STRING_SIZE];
-    int len = strlen(ch);
-    memset(ch_tmp, 0, STRING_SIZE);
-    memcpy(ch_tmp, ch, len);
-    // xtrim(ch_tmp, ",:.\n!&@^$%");
-    
     for(int i = 0; i < len; i++) {
-        ch_tmp[i] = tolower(ch[i]);
+        ch[i] = tolower(ch[i]);
     }
+    return ch;
+}
+
+bool handler(word_count_word_t *words, char *ch)
+{
+    int len = strlen(ch);
+
+    ch = str_tolower(fix_char(ch, len), len);
 
     int j = 0;
     int has = 0;
@@ -70,7 +50,7 @@ bool test(word_count_word_t *words, const char *ch)
             break;
         }
 
-        if (strcmp(words[i].text, ch_tmp) == 0) {
+        if (strcmp(words[i].text, ch) == 0) {
             words[i].count++;
             has = 1;
             break;
@@ -80,7 +60,7 @@ bool test(word_count_word_t *words, const char *ch)
     }
 
     if  (!has) {
-        memcpy(words[j].text, ch_tmp, len);
+        memcpy(words[j].text, ch, len);
         words[j].count = 1;
         return false;
     }
@@ -92,17 +72,19 @@ bool test(word_count_word_t *words, const char *ch)
 int word_count(const char *input_text, word_count_word_t * words)
 {
     char *sep = " ,:.\n!&@^$%";
-    char tmp[STRING_SIZE * MAX_WORDS];
+
+    int len = strlen(input_text) + 1;
+    char *tmp = malloc(len);
     
-    memset(tmp, 0, STRING_SIZE * MAX_WORDS);
-    memcpy(tmp, input_text, STRING_SIZE * MAX_WORDS);
+    memset(tmp, 0, len);
+    memcpy(tmp, input_text, len);
     
     memset(words, 0, sizeof(word_count_word_t) * MAX_WORDS);
 
     int ret = 0;
-    char *x = strtok(tmp, sep);
-    while(x) {
-        if (strlen(x) > MAX_WORD_LENGTH) {
+    char *ch = strtok(tmp, sep);
+    while(ch) {
+        if (strlen(ch) > MAX_WORD_LENGTH) {
             ret = EXCESSIVE_LENGTH_WORD;
             break;
         }
@@ -112,11 +94,11 @@ int word_count(const char *input_text, word_count_word_t * words)
             break;
         }
 
-        if (!test(words, x)) {
+        if (!handler(words, ch)) {
             ret++;
         }
 
-        x = strtok(NULL, sep);
+        ch = strtok(NULL, sep);
     }
     printW(words);
 
