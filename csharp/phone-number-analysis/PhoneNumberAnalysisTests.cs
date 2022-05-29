@@ -38,17 +38,17 @@ public class PhoneNumberAnalysisTests
         Assert.Equal((false, false, "1234"), PhoneNumber.Analyze("515-212-1234"));
     }
 
-    // [Fact]
-    // [Task(2)]
-    // public void Is_Fake_fake()
-    // {
-    //     Assert.True(PhoneNumber.IsFake(PhoneNumber.Analyze("212-555-1234")));
-    // }
+    [Fact]
+    [Task(2)]
+    public void Is_Fake_fake()
+    {
+        Assert.True(PhoneNumber.IsFake(PhoneNumber.Analyze("212-555-1234")));
+    }
 
-    // [Fact]
-    // [Task(2)]
-    // public void Is_Fake_non_fake()
-    // {
-    //     Assert.False(PhoneNumber.IsFake(PhoneNumber.Analyze("555-212-1234")));
-    // }
+    [Fact]
+    [Task(2)]
+    public void Is_Fake_non_fake()
+    {
+        Assert.False(PhoneNumber.IsFake(PhoneNumber.Analyze("555-212-1234")));
+    }
 }
