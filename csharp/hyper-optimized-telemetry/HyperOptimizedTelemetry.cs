@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 public static class TelemetryBuffer
 {
@@ -20,19 +19,27 @@ public static class TelemetryBuffer
             >= -9_223_372_036_854_775_808 and <= -2_147_483_649 => sizeof(long),
         };
 
-        var arr = new List<byte>();
-        arr.Add(_t);
+        var arr = new byte[9];
+        arr[0] = _t;
 
         var x = reading;
+        var index = 1;
+
+        if (x < 0)
+        {
+            arr[index] = 0xff;
+            index++;
+        }
+
         while (x >= 0xff)
         {
-            arr.Add((byte) (x % 0x100));
+            arr[index] = ((byte)(x % 0x100));
             x /= 0x100;
+            index++;
         }
-        arr.Add((byte)x);
+        arr[index] = ((byte)x);
 
-
-        return arr.ToArray();
+        return arr;
     }
 
     public static long FromBuffer(byte[] buffer)
