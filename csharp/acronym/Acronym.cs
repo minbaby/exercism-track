@@ -25,7 +25,7 @@ public static class Acronym
     public static string Abbreviate2(string phrase)
     {
         string ret = "";
-        phrase.Split(new char[] { ' ', '-', '_' }, StringSplitOptions.RemoveEmptyEntries).ToList().ForEach(f => ret += f.ToList().First(f => Char.IsLetter(f)););
+        phrase.Split(new char[] { ' ', '-', '_' }, StringSplitOptions.RemoveEmptyEntries).ToList().ForEach(f => ret += f.ToList().First(f => Char.IsLetter(f)));
 
         return ret.ToUpper();
     }
