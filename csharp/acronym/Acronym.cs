@@ -22,15 +22,16 @@ public static class Acronym
         return ret;
     }
 
-    public static string Abbreviate(string phrase)
+    public static string Abbreviate2(string phrase)
     {
         string ret = "";
-        phrase.Split(new char[] { ' ', '-' }).ToList().ForEach(f =>
-        {
-            var s = f.ToList().First(f => Char.IsLetter(f));
-            ret += s;
-        });
+        phrase.Split(new char[] { ' ', '-', '_' }, StringSplitOptions.RemoveEmptyEntries).ToList().ForEach(f => ret += f.ToList().First(f => Char.IsLetter(f)););
 
         return ret.ToUpper();
+    }
+
+    public static string Abbreviate(string phrase)
+    {
+        return String.Join("", phrase.Split(new char[] { ' ', '-', '_' }, StringSplitOptions.RemoveEmptyEntries).Select(f => f[0])).ToUpper();
     }
 }

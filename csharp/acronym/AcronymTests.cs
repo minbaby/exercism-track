@@ -5,7 +5,7 @@ public class AcronymTests
     [Fact]
     public void Basic()
     {
-        Assert.Equal("PNG", Acronym.Abbreviate("Portable Networ  k Graphics"));
+        Assert.Equal("PNG", Acronym.Abbreviate("Portable Networ Graphics"));
     }
 
     [Fact]
