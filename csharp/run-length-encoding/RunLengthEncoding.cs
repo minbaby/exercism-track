@@ -1,11 +1,12 @@
 using System;
 using System.Linq;
-
+using System.Text.RegularExpressions;
 
 // 这个题目。。。暂时我只会用索引的方法解决，我再思考一下有没有其他方法
+// 看了一眼其他人的方法。。。emmmm，直接用的正则表达式，这个思路我还真没有想到
 public static class RunLengthEncoding
 {
-    public static string Encode(string input)
+    public static string Encode1(string input)
     {
         string ret = "";
         int i = 0, j = 0;
@@ -41,7 +42,7 @@ public static class RunLengthEncoding
         return ret;
     }
 
-    public static string Decode(string input)
+    public static string Decode1(string input)
     {
         string ret = "";
         int i = 0;
@@ -70,5 +71,17 @@ public static class RunLengthEncoding
         }
 
         return ret;
+    }
+
+
+
+    public static string Encode(string input)
+    {
+        return Regex.Replace(input, @"(\D)(\1+)", m => $"{m.Groups[0].Length}{m.Groups[1].Value}");
+    }
+
+    public static string Decode(string input)
+    {
+        return Regex.Replace(input, @"(\d+)(\D)", m => new(m.Groups[2].Value[0], int.Parse(m.Groups[1].Value)));
     }
 }
