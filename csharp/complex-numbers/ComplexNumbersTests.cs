@@ -149,7 +149,7 @@ public class ComplexNumbersTests
     {
         var sut = new ComplexNumber(0, 1);
         var expected = new ComplexNumber(0.5, 0);
-        Assert.Equal(expected.Real(), sut.ex(new ComplexNumber(0, 2)).Real(), precision: 7);
+        Assert.Equal(expected.Real(), sut.Div(new ComplexNumber(0, 2)).Real(), precision: 7);
         Assert.Equal(expected.Imaginary(), sut.Div(new ComplexNumber(0, 2)).Imaginary(), precision: 7);
     }
 
