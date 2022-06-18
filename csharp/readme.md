@@ -13,7 +13,7 @@
 # exercism, rename exercism => exercism_origin
 #####################
 esb() {exercism submit -v ${$(ls | grep Tests\.cs)/Tests\.cs/\.cs}}
-if [ ! -x "$(command -v exercism_origin)" ]; then
+if [ ! -x "$(command -v exercism)" ]; then
     exercism() {
         arr=($@);
             echo $arr[1];
