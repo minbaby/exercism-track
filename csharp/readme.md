@@ -19,6 +19,8 @@ if [ ! -x "$(command -v exercism)" ]; then
             echo $arr[1];
             if [ $arr[1] = "download" ]; then
                 WS=`exercism_origin $@`
+                echo "dotnet restore"
+                dotnet resotre
                 echo "change && open $WS"
                 cd $WS
                 code $WS
