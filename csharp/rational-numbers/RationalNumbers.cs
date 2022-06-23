@@ -5,7 +5,7 @@ public static class RealNumberExtension
 {
     public static double Expreal(this int realNumber, RationalNumber r)
     {
-        throw new NotImplementedException("You need to implement this extension method.");
+        return r.Expreal(realNumber);
     }
 }
 
@@ -42,8 +42,7 @@ public struct RationalNumber
     {
         var _num = r1._numerator * r2._numerator;
         var _den = r1._denominator * r2._denominator;
-        var gcd = GCD(Math.Abs(_num), Math.Abs(_den));
-        return new RationalNumber(_num / gcd, _den / gcd);
+        return new RationalNumber(_num, _den).Reduce();
     }
 
     public static RationalNumber operator /(RationalNumber r1, RationalNumber r2)
@@ -55,8 +54,7 @@ public struct RationalNumber
 
         var _num = r1._numerator * r2._denominator;
         var _den = r1._denominator * r2._numerator;
-        var gcd = GCD(Math.Abs(_num), Math.Abs(_den));
-        return new RationalNumber(_num / gcd, _den / gcd);
+        return new RationalNumber(_num, _den).Reduce();
     }
 
     public RationalNumber Abs()
@@ -66,17 +64,28 @@ public struct RationalNumber
 
     public RationalNumber Reduce()
     {
-        throw new NotImplementedException("You need to implement this function.");
+        var gcd = GCD(Math.Abs(_numerator), Math.Abs(_denominator));
+        if (_denominator < 0) {
+            _denominator = - _denominator;
+            _numerator = - _numerator;
+        }
+        return new RationalNumber(_numerator / gcd, _denominator/ gcd);
     }
 
     public RationalNumber Exprational(int power)
     {
-        throw new NotImplementedException("You need to implement this function.");
+        if (power > 0) {
+            return new RationalNumber((int)Math.Pow(_numerator, power), (int)Math.Pow(_denominator, power)).Reduce();
+        } else {
+            power = - power;
+            return new RationalNumber((int)Math.Pow(_denominator, power), (int)Math.Pow(_numerator, power)).Reduce();
+        }
     }
 
+    // x^(2/3) = 3√￣ (x^2)
     public double Expreal(int baseNumber)
     {
-        throw new NotImplementedException("You need to implement this function.");
+        return Math.Pow(baseNumber, _numerator * 1.0/_denominator);
     }
 
     // https://oi-wiki.org/math/number-theory/gcd/#_2
