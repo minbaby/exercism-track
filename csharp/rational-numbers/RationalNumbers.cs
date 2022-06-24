@@ -1,106 +1,58 @@
 using System;
 using System.Diagnostics;
+using System.Security.Cryptography;
 
 public static class RealNumberExtension
 {
-    public static double Expreal(this int realNumber, RationalNumber r)
-    {
-        return r.Expreal(realNumber);
-    }
+    public static double Expreal(this int realNumber, RationalNumber r) => r.Expreal(realNumber);
 }
 
 public struct RationalNumber
 {
     // 分子
-    private int _numerator;
+    private readonly int _numerator;
+
     // 分母
-    private int _denominator;
+    private readonly int _denominator;
 
     public RationalNumber(int numerator, int denominator)
     {
-        _numerator = numerator;
-        _denominator = denominator;
+        var gcd = GCD(numerator, denominator);
+        _numerator = numerator / gcd;
+        _denominator = denominator / gcd;
+        
+        if (_denominator < 0)
+        {
+            _numerator = -_numerator;
+            _denominator = -_denominator;
+        }
     }
 
-    public static RationalNumber operator +(RationalNumber r1, RationalNumber r2)
-    {
-        var _num = r1._numerator * r2._denominator + r2._numerator * r1._denominator;
-        var _den = _num == 0 ? 1 : r1._denominator * r2._denominator;
+    public static RationalNumber operator +(RationalNumber r1, RationalNumber r2) =>
+        new(r1._numerator * r2._denominator + r2._numerator * r1._denominator, r1._denominator * r2._denominator);
 
-        return new RationalNumber(_num, _den);
-    }
+    public static RationalNumber operator -(RationalNumber r1) => new RationalNumber(-r1._numerator, r1._denominator);
 
-    public static RationalNumber operator -(RationalNumber r1, RationalNumber r2)
-    {
-        var _num = r1._numerator * r2._denominator - r2._numerator * r1._denominator;
-        var _den = _num == 0 ? 1 : r1._denominator * r2._denominator;
-
-        return new RationalNumber(_num, _den);
-    }
+    public static RationalNumber operator -(RationalNumber r1, RationalNumber r2) => r1 + (-r2);
 
     public static RationalNumber operator *(RationalNumber r1, RationalNumber r2)
-    {
-        var _num = r1._numerator * r2._numerator;
-        var _den = r1._denominator * r2._denominator;
-        return new RationalNumber(_num, _den).Reduce();
-    }
+        => new(r1._numerator * r2._numerator, r1._denominator * r2._denominator);
 
     public static RationalNumber operator /(RationalNumber r1, RationalNumber r2)
-    {
-        if (r2._denominator == 0 || r2._numerator == 0)
-        {
-            return new RationalNumber();
-        }
+        => new(r1._numerator * r2._denominator, r1._denominator * r2._numerator);
 
-        var _num = r1._numerator * r2._denominator;
-        var _den = r1._denominator * r2._numerator;
-        return new RationalNumber(_num, _den).Reduce();
-    }
+    public RationalNumber Abs() => new(Math.Abs(_numerator), Math.Abs(_denominator));
 
-    public RationalNumber Abs()
-    {
-        return new RationalNumber(Math.Abs(_numerator), Math.Abs(_denominator));
-    }
+    public RationalNumber Reduce() => this;
 
-    public RationalNumber Reduce()
-    {
-        var gcd = GCD(Math.Abs(_numerator), Math.Abs(_denominator));
-        if (_denominator < 0) {
-            _denominator = - _denominator;
-            _numerator = - _numerator;
-        }
-        return new RationalNumber(_numerator / gcd, _denominator/ gcd);
-    }
-
-    public RationalNumber Exprational(int power)
-    {
-        if (power > 0) {
-            return new RationalNumber((int)Math.Pow(_numerator, power), (int)Math.Pow(_denominator, power)).Reduce();
-        } else {
-            power = - power;
-            return new RationalNumber((int)Math.Pow(_denominator, power), (int)Math.Pow(_numerator, power)).Reduce();
-        }
-    }
+    public RationalNumber Exprational(int power) =>
+        new((int)Math.Pow(_numerator, power), (int)Math.Pow(_denominator, power));
 
     // x^(2/3) = 3√￣ (x^2)
-    public double Expreal(int baseNumber)
-    {
-        return Math.Pow(baseNumber, _numerator * 1.0/_denominator);
-    }
+    public double Expreal(int baseNumber) => Math.Pow(baseNumber, _numerator * 1.0 / _denominator);
 
     // https://oi-wiki.org/math/number-theory/gcd/#_2
-    public static int GCD(int a, int b)
-    {
-        if (a < b)
-        {
-            (a, b) = (b, a);
-        }
+    private static int GCD(int a, int b) => b == 0 ? a : GCD(b, a % b);
 
-        if (b == 0)
-        {
-            return a;
-        }
-
-        return GCD(b, a % b);
-    }
+    public override string ToString() => $"{_numerator}/{_denominator}";
 }

@@ -1,0 +1,21 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=1013baa7_002D8686_002D42ca_002D930c_002D32f48793a350/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Finds_the_smallest_palindrome_from_single_digit_factors #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::31A5F10F-9F74-6572-2451-7312D2901BE5::net6.0::PalindromeProductsTests&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=32b9d90b_002Dcaff_002D4dc3_002D816e_002D80767c0ea4c1/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Finds_the_smallest_palindrome_from_single_digit_factors" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::31A5F10F-9F74-6572-2451-7312D2901BE5::net6.0::PalindromeProductsTests.Finds_the_smallest_palindrome_from_single_digit_factors&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=38397494_002D11b6_002D4118_002Db8d6_002D3dc87b9d47eb/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Finds_the_smallest_palindrome_from_single_digit_factors #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::31A5F10F-9F74-6572-2451-7312D2901BE5::net6.0::PalindromeProductsTests.Finds_the_smallest_palindrome_from_single_digit_factors&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b0248af8_002Db62a_002D4173_002D856b_002D447214aeb803/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Finds_the_smallest_palindrome_from_single_digit_factors #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::31A5F10F-9F74-6572-2451-7312D2901BE5::net6.0::PalindromeProductsTests.Finds_the_smallest_palindrome_from_single_digit_factors&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
