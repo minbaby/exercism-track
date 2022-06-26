@@ -9,14 +9,14 @@ public static class PalindromeProducts
         var x = D(minFactor, maxFactor);
 
         (int, IEnumerable<(int, int)>) ret = new()
-            { Item1 = int.MinValue, Item2 = Array.Empty<(int, int)>() };
+        { Item1 = int.MinValue, Item2 = Array.Empty<(int, int)>() };
 
-        foreach (var (k, value) in x)
+        foreach (var (k, v) in x)
         {
-            if (value >= ret.Item1)
+            if (k >= ret.Item1)
             {
-                ret.Item1 = value;
-                ret.Item2 = ret.Item2.Append(k);
+                ret.Item1 = k;
+                ret.Item2 = v;
             }
         }
 
@@ -28,35 +28,47 @@ public static class PalindromeProducts
         var x = D(minFactor, maxFactor);
 
         (int, IEnumerable<(int, int)>) ret = new()
-            { Item1 = int.MaxValue, Item2 = Array.Empty<(int, int)>() };
+        { Item1 = int.MaxValue, Item2 = Array.Empty<(int, int)>() };
 
-        foreach (var (k, value) in x)
+        foreach (var (k, v) in x)
         {
-            if (value <= ret.Item1)
+            if (k <= ret.Item1)
             {
-                ret.Item1 = value;
-                ret.Item2 = ret.Item2.Append(k);
+                ret.Item1 = k;
+                ret.Item2 = v;
             }
         }
 
         return ret;
     }
 
-    private static Dictionary<(int, int), int> D(int minFactor, int maxFactor)
+    private static Dictionary<int, IEnumerable<(int, int)>> D(int minFactor, int maxFactor)
     {
-        var list = new Dictionary<(int, int), int>();
-        for (int i = minFactor; i < maxFactor; i++)
+        var ret = new Dictionary<int, IEnumerable<(int, int)>>();
+        for (int i = minFactor; i <= maxFactor; i++)
         {
-            for (int j = i; j < maxFactor; j++)
+            for (int j = i; j <= maxFactor; j++)
             {
-                if (IsPalindrome(i * j))
+                var values = i * j;
+                if (IsPalindrome(values))
                 {
-                    list.Add((i, j), i * j);
+                    if (ret.TryGetValue(values, out var v))
+                    {
+                        ret[values] = v.Append((i, j));
+                    }
+                    else
+                    {
+                        ret[values] = Array.Empty<(int, int)>().Append((i, j));
+                    }
                 }
             }
         }
 
-        return list;
+        if (ret.Count == 0) {
+            throw new ArgumentException();
+        }
+
+        return ret;
     }
 
     private static bool IsPalindrome(int value)
