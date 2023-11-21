@@ -4,10 +4,7 @@ using System.Linq;
 
 using Sprache;
 
-/// <summary>
-/// <see cref="https://github.com/antlr/grammars-v4/blob/master/sgf/sgf.g4"/>
-/// <see cref="https://exercism.org/tracks/csharp/exercises/sgf-parsing/solutions/davidciglesias"/>
-/// </summary>
+
 public class SgfTree
 {
     public SgfTree(IDictionary<string, string[]> data, params SgfTree[] children)
@@ -20,74 +17,82 @@ public class SgfTree
     public SgfTree[] Children { get; }
 }
 
+/// <summary>
+/// <see cref="https://github.com/antlr/grammars-v4/blob/master/sgf/sgf.g4"/>
+/// <see cref="https://exercism.org/tracks/csharp/exercises/sgf-parsing/solutions/davidciglesias"/>
+/// </summary>
+internal class Grammar1
+{
+    private static readonly Parser<char> BackslashEscape = Parse.Char('\\');
+    private static readonly Parser<char> PropertyDelimiterBegin = Parse.Char('[');
+    private static readonly Parser<char> PropertyDelimiterEnd = Parse.Char(']');
+    private static readonly Parser<char> ChildrenDelimiterBegin = Parse.Char('(');
+    private static readonly Parser<char> ChildrenDelimiterEnd = Parse.Char(')');
+    private static readonly Parser<char> InstructionStart = Parse.Char(';');
+
+
+    private static Parser<T> Escaped<T>(Parser<T> following) =>
+        from _ in BackslashEscape.Once()
+        from f in following
+        select f;
+
+    private static readonly Parser<char> PropertyContent =
+        Escaped(PropertyDelimiterBegin)
+            .Or(Escaped(PropertyDelimiterEnd))
+            .Or(Escaped(BackslashEscape))
+            .Or(Parse.AnyChar.Except(PropertyDelimiterBegin).Except(PropertyDelimiterEnd));
+
+    private static readonly Parser<string> Property =
+        from open in PropertyDelimiterBegin
+        from content in PropertyContent.Many().Text()
+        from end in PropertyDelimiterEnd
+        select content.Replace("\\t", " ").Replace("\\n", "\n");
+
+    // private static readonly Parser<string> Key = Parse.Many(Parse.Char(char.IsUpper, "Only upper keys allowed")).Text();
+    private static readonly Parser<string> Key = Parse.Upper.Many().Text();
+
+    private static readonly Parser<KeyValuePair<string, IEnumerable<string>>> KeyProperties =
+        from key in Key
+        from properties in Property.AtLeastOnce()
+        select new KeyValuePair<string, IEnumerable<string>>(key, properties);
+
+    private static readonly Parser<Dictionary<string, string[]>> ValueProperties =
+        from keyProperties in KeyProperties.Many()
+        select keyProperties.ToDictionary(
+            f => f.Key,
+            f => f.Value.ToArray()
+        );
+
+    private static readonly Parser<SgfTree> Node =
+        from _ in InstructionStart
+        from value in ValueProperties
+        from children in Node.Once().Or(Children.Many())
+        select new SgfTree(value, children.ToArray());
+
+    public static readonly Parser<SgfTree> Children =
+        from _ in ChildrenDelimiterBegin
+        from node in Node
+        from _2 in ChildrenDelimiterEnd
+        select node;
+}
+
+
+internal class Grammar
+{
+    public static Parser<string> Children { get; set; }
+}
+
 public class SgfParser
 {
-    private static readonly Parser<SgfTree> SgfTree =
-        from leading in Parse.Char('(')
-        from a in Parse.AnyChar
-        from tailing in Parse.Char(')')
-        select new SgfTree(new Dictionary<string, string[]>());
-
-    private static readonly Parser<string> UcLetter = Parse.Upper.AtLeastOnce().Text();
-
-    private static readonly Parser<char> Digit = Parse.Digit;
-
-    private static readonly Parser<char> None = Parse.WhiteSpace;
-
-    private static readonly Parser<string> Number =
-        from q in Parse.Chars(new[] { '+', '-' })
-        from d in Digit.AtLeastOnce().Text().End()
-        select q.ToString() + d;
-
-    private static readonly Parser<string> Real =
-        from n in Number
-        from d in Digit.Many().Text().End()
-        select n + d;
-
-    private static readonly Parser<char> Double = Parse.Chars(new[] { '1', '2' });
-
-    private static readonly Parser<char> Color = Parse.Chars(new[] { 'B', 'W' });
-
-    private static readonly Parser<string> SimpleText = Parse.AnyChar.AtLeastOnce().Text();
-
-    private static readonly Parser<string> Text = Parse.AnyChar.AtLeastOnce().Text();
-
-    private static readonly Parser<string> Point = Parse.AnyChar.AtLeastOnce().Text();
-
-    private static readonly Parser<string> Move = Parse.AnyChar.AtLeastOnce().Text();
-
-    private static readonly Parser<string> Stone = Parse.AnyChar.AtLeastOnce().Text();
-
-    private static readonly Parser<string> ValueType =
-        Parse.Upper.Or(Parse.Digit).Many().Text();
-
-    private static readonly Parser<string> Compose =
-        from v in ValueType
-        from m in Parse.Char(':')
-        from vv in ValueType
-        select v + m + vv;
-
-    private static readonly Parser<string> CValueType =
-        ValueType.Or(Compose);
-
-    private static readonly Parser<string> PropValue =
-        from s in Parse.Char('[')
-        from cv in CValueType
-        from e in Parse.Char(']')
-        select s + cv + e;
-
-    private static readonly Parser<IEnumerable<string>> PropIdent = UcLetter.AtLeastOnce().Many();
-
-    private static readonly Parser<IEnumerable<string>> Property =
-        from pi in PropIdent
-        from pv in PropValue.AtLeastOnce()
-        select pi.Concat(pv);
-
-    private static readonly Parser<string> Node =
-        from n in Parse.Char(';')
-        from pp in Property.AtLeastOnce()
-        select n.ToString();
-
-
-    public static SgfTree ParseTree(string input) => SgfTree.Parse(input);
+    public static SgfTree ParseTree(string input)
+    {
+        try
+        {
+            return Grammar.Children.Parse(input);
+        }
+        catch
+        {
+            throw new ArgumentException();
+        }
+    }
 }
